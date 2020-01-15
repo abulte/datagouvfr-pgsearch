@@ -1,0 +1,12 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./db:/var/lib/postgresql/data
+      - ./data:/data
+    environment:
+      - POSTGRES_DB=datagouvfr
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
