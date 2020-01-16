@@ -11,7 +11,6 @@ Search in data.gouv.fr's catalog with PostgreSQL.
 docker-compose up -d
 sh prepare-data.sh
 python cmd.py load
-python cmd.py create_index
 python app.py
 ```
 

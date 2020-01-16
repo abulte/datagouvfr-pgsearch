@@ -2,7 +2,7 @@ import time
 import asyncpg
 
 from quart import Quart, jsonify, request, current_app
-from db import search
+from db import search, DSN
 
 app = Quart(__name__)
 app.DEBUG = True
@@ -22,7 +22,6 @@ async def index():
 
 @app.before_first_request
 async def create_db():
-    dsn = 'postgres://postgres:postgres@localhost:5432/datagouvfr'
-    app.pool = await asyncpg.create_pool(dsn, max_size=20)
+    app.pool = await asyncpg.create_pool(DSN, max_size=20)
 
 app.run()

@@ -1,16 +1,12 @@
-import psycopg2
+import asyncpg
 
-def execute(statement, params=tuple()):
-    conn = get_conn()
-    cur = conn.cursor()
-    res = cur.execute(statement, params)
-    conn.commit()
-    cur.close()
-    conn.close()
-    return cur
+DSN = 'postgres://postgres:postgres@localhost:5432/datagouvfr'
 
-def get_conn():
-    return psycopg2.connect(dbname='datagouvfr', user='postgres', password='postgres', host='localhost')
+
+async def execute(query):
+    conn = await asyncpg.connect(DSN)
+    await conn.execute(query)
+
 
 async def search(query, connection):
     q = '''
