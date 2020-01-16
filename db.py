@@ -12,9 +12,7 @@ def execute(statement, params=tuple()):
 def get_conn():
     return psycopg2.connect(dbname='datagouvfr', user='postgres', password='postgres', host='localhost')
 
-def search(query):
-    conn = get_conn()
-    cur = conn.cursor()
+async def search(query, connection):
     q = '''
 SELECT _id, title, description, organization
 FROM (SELECT remote_id as _id,
@@ -23,12 +21,7 @@ FROM (SELECT remote_id as _id,
              setweight(to_tsvector('french', description), 'B') ||
              setweight(to_tsvector('simple', organization), 'C') as document
       FROM datasets) p_search
-WHERE p_search.document @@ to_tsquery('french', %s)
-ORDER BY ts_rank(p_search.document, to_tsquery('french', %s)) DESC LIMIT 10;
+WHERE p_search.document @@ to_tsquery('french', $1)
+ORDER BY ts_rank(p_search.document, to_tsquery('french', $1)) DESC LIMIT 10;
 '''
-    cur.execute(q, (query, query))
-    res = cur.fetchall()
-    conn.commit()
-    cur.close()
-    conn.close()
-    return res
+    return await connection.fetch(q, query)
