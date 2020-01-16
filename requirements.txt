@@ -2,3 +2,5 @@ Quart
 asyncpg
 csvkit
 minicli
+httpx
+progressist

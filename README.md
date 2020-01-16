@@ -5,12 +5,14 @@ Search in data.gouv.fr's catalog with PostgreSQL.
 - get the catalog from https://www.data.gouv.fr/fr/datasets/catalogue-des-donnees-de-data-gouv-fr/
 - filter data: `spatial.zones` contains `France` and keep only the column we need
 - insert in a PostgreSQL database
+- fetch the `nb_hits` metric from stats.data.gouv.fr
 - expose a simple API
 
 ```shell
 docker-compose up -d
 sh prepare-data.sh
 python cmd.py load
+python cmd.py fetch_stats
 python app.py
 ```
 
@@ -19,67 +21,77 @@ python app.py
 ```json
 {
   "data": [
-    [
-      "544a1f9cc751df69c59bbff8",
-      "Agreste - Les entreprises d'exploitations forestières et entreprises de sciage, de rabotage et d’imprégnation du bois",
-      "Caractéristiques comptables financières et d’emploi des entreprises\nLes principales variables de synthèse : nombre d’entreprises, effectifs salariés moyens, chiffre d’affaires, exportations et livraisons intracommunautaires, valeur ajoutée, excédent brut",
-      "Ministère de l'Agriculture et de l'Alimentation"
-    ],
-    [
-      "5369986ea3a729239d204f67",
-      "Les principales entreprises étrangères ayant des accords de coopération avec des entreprises françaises de défense",
-      "CA total, CA de défense, Effectifs, accords de coopération",
-      "Ministère des Armées"
-    ],
-    [
-      "5b7ffc618b4c4169d30727e0",
-      "Base Sirene des entreprises et de leurs établissements (SIREN, SIRET)",
-      "\n\n\n- Pour vous abonner à notre lettre d'information **Sirene open data actualités**, suivez ce lien : https://insee.fr/fr/information/1405555\n- Pour consulter nos lettres d'information **Sirene open data actualités**, suivez ce lien : https://insee.fr/fr",
-      "Institut National de la Statistique et des Etudes Economiques (Insee)"
-    ],
-    [
-      "5d9215888b4c415092182f79",
-      "Enquête sur les entreprises et le développement durable ",
-      "L’objectif de l’enquête sur les entreprises et le développement durable (EnDD) est de mesurer l’implication des entreprises dans une démarche de développement durable dans ses différentes dimensions (environnementale, sociale, économique). L’enquête  vis",
-      "Institut National de la Statistique et des Etudes Economiques (Insee)"
-    ],
-    [
-      "5be2c158634f411a17542f57",
-      "chefs d’exploitation ou d’entreprise agricole par EPCI 2017",
-      "Le champ des chefs d’exploitation ou d’entreprise agricole exclut les exploitants agricoles ou les chefs d’entreprise agricole dont l’exploitation procure une activité inférieure à l’activité minimale d’assujettissement (AMA).\nLa loi d’avenir pour l’agri",
-      "Mutualité Sociale Agricole"
-    ],
-    [
-      "5be2c2e2634f411df372f474",
-      "installations de chefs d’exploitation ou d’entreprise agricole par EPCI 2016",
-      "Le champ des chefs d’exploitation ou d’entreprise agricole exclut les exploitants agricoles ou les chefs d’entreprise agricole dont l’exploitation procure une activité inférieure à l’activité minimale d’assujettissement (AMA).\nLa loi d’avenir pour l’agri",
-      "Mutualité Sociale Agricole"
-    ],
-    [
-      "53698f4ea3a729239d2036ee",
-      "Base de données des obligations d'information pesant sur les entreprises",
-      "La base de données des obligations d'information pesant sur les entreprises concerne l'ensemble des informations que les entreprises doivent communiquer à une autorité publique ou à des tiers. Ce recensement des obligations qui s'imposent aux entreprises",
-      "Premier ministre"
-    ],
-    [
-      "5a0b0be188ee3871db07ce4e",
-      "ACCO : Accords d’entreprise",
-      "**Ce jeu de données provient d'un service public certifié**\n\n\nLes accords d’entreprise diffusés conformément à l’article du décret n° 2017-752 du 3 mai 2017 relatif à la publicité des accords collectifs. \n\n\nCes accords peuvent concerner : \n\n- les groupes",
-      "Premier ministre"
-    ],
-    [
-      "5369a052a3a729239d206338",
-      "Statistiques annuelles d'entreprises : Esane",
-      "Le dispositif ÉSANE (Élaboration des Statistiques Annuelles d'Entreprises) propose chaque année une photographie de la population des unités légales (sociétés, entreprises individuelles, parties d'administrations publiques et certaines associations) ou d",
-      "Institut National de la Statistique et des Etudes Economiques (Insee)"
-    ],
-    [
-      "53699260a3a729239d203ee9",
-      "Démographie des entreprises",
-      "Ce jeu de données provient de la Banque de Données Macro-économiques de l'INSEE. La BDM est la principale base de données de séries et indices sur l'ensemble des domaines économiques et sociaux. Elle met à disposition toutes les informations nécessaires ",
-      "Institut National de la Statistique et des Etudes Economiques (Insee)"
-    ]
+    {
+      "_id": "58e53811c751df03df38f42d",
+      "description": "Le Répertoire National des Associations (RNA) contient l’ensemble des associations relevant de la loi 1901, à savoir toutes les associations de France, dont le siège est déclaré en métropole ou dans les départements d’outre-mer, sauf dans les département",
+      "nb_hits": 12203,
+      "organization": "Ministère de l'Intérieur",
+      "title": "Répertoire National des Associations"
+    },
+    {
+      "_id": "5b7ffc618b4c4169d30727e0",
+      "description": "\n\n\n- Pour vous abonner à notre lettre d'information **Sirene open data actualités**, suivez ce lien : https://insee.fr/fr/information/1405555\n- Pour consulter nos lettres d'information **Sirene open data actualités**, suivez ce lien : https://insee.fr/fr",
+      "nb_hits": 5919,
+      "organization": "Institut National de la Statistique et des Etudes Economiques (Insee)",
+      "title": "Base Sirene des entreprises et de leurs établissements (SIREN, SIRET)"
+    },
+    {
+      "_id": "5710b9f088ee383cf54d8898",
+      "description": "**Attention : le jeu de données contient plus de 2 millions de lignes. Il convient de disposer d’un logiciel permettant d’afficher l’ensemble de ces lignes.**\n\nLa base de données publique Transparence - Santé rend accessible l'ensemble des informations d",
+      "nb_hits": 1965,
+      "organization": "Ministère des Solidarités et de la Santé",
+      "title": "Transparence-santé"
+    },
+    {
+      "_id": "5943d4c188ee38742a95eb0d",
+      "description": "La Commission européenne a adopté la carte française des zones d’aides à finalité régionale (AFR) pour la période 2014-2020, mise en œuvre par le [décret n° 2014-758 du 2 juillet 2014 relatif aux zones d'aide à finalité régionale (AFR) et aux zones d'aid",
+      "nb_hits": 1086,
+      "organization": "Commissariat général à l'égalité des territoires",
+      "title": "Zone d'Aide à Finalité Régionale (AFR)"
+    },
+    {
+      "_id": "5369965fa3a729239d204999",
+      "description": "Vous pouvez consulter les taux votés ainsi que l'ensemble des données (bases, taux et produits) par collectivité territoriale. Les données sont disponibles en pièces jointes et pour une partie sur le site : <https://www.impots.gouv.fr/portail/statistique",
+      "nb_hits": 698,
+      "organization": "Ministère de l'économie et des finances",
+      "title": "Impôts locaux"
+    },
+    {
+      "_id": "53ca2be2a3a7294a1ddd7847",
+      "description": "Les données ''ASSOCIATIONS'' sont extraites du JOAFE (JOURNAL OFFICIEL DES ASSOCIATIONS ET FONDATIONS D'ENTREPRISE)\n\nLe Journal officiel des associations, associations syndicales de propriétaires et fondations d’entreprise publie :\n\nLes déclarations de c",
+      "nb_hits": 447,
+      "organization": "Premier ministre",
+      "title": "ASSOCIATIONS"
+    },
+    {
+      "_id": "559395f1c751df0f51a453b9",
+      "description": "Annonces publiées au Bodacc (Bulletin officiel des annonces civiles et commerciales).\n\nLe Bodacc (Bulletin officiel des annonces civiles et commerciales), régi par l’article R 123-209 du code de commerce, publie les avis prévus par ce code et les textes ",
+      "nb_hits": 343,
+      "organization": "Premier ministre",
+      "title": "BODACC"
+    },
+    {
+      "_id": "544a1f9cc751df69c59bbff8",
+      "description": "Caractéristiques comptables financières et d’emploi des entreprises\nLes principales variables de synthèse : nombre d’entreprises, effectifs salariés moyens, chiffre d’affaires, exportations et livraisons intracommunautaires, valeur ajoutée, excédent brut",
+      "nb_hits": 0,
+      "organization": "Ministère de l'Agriculture et de l'Alimentation",
+      "title": "Agreste - Les entreprises d'exploitations forestières et entreprises de sciage, de rabotage et d’imprégnation du bois"
+    },
+    {
+      "_id": "5369986ea3a729239d204f67",
+      "description": "CA total, CA de défense, Effectifs, accords de coopération",
+      "nb_hits": 0,
+      "organization": "Ministère des Armées",
+      "title": "Les principales entreprises étrangères ayant des accords de coopération avec des entreprises françaises de défense"
+    },
+    {
+      "_id": "5d9215888b4c415092182f79",
+      "description": "L’objectif de l’enquête sur les entreprises et le développement durable (EnDD) est de mesurer l’implication des entreprises dans une démarche de développement durable dans ses différentes dimensions (environnementale, sociale, économique). L’enquête  vis",
+      "nb_hits": 0,
+      "organization": "Institut National de la Statistique et des Etudes Economiques (Insee)",
+      "title": "Enquête sur les entreprises et le développement durable "
+    }
   ],
-  "time": 0.11758780479431152
+  "time": 0.15753912925720215
 }
 ```
