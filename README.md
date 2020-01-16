@@ -15,10 +15,11 @@ docker-compose up -d
 sh prepare-data.sh
 python cmd.py load
 python cmd.py fetch_stats
-python app.py
+pip install hupper
+hupper -m pgsearch
 ```
 
-🤜 http://localhost:5000?q=entreprises
+🤜 http://localhost:3579?q=entreprises
 
 ```json
 {
