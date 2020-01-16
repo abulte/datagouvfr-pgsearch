@@ -14,7 +14,10 @@ async def execute(query):
 
 async def search(query, connection):
     q = '''
-SELECT _id, title, description, organization, nb_hits
+SELECT
+    _id, title, description, organization, nb_hits,
+    ts_rank(p_search.document, to_tsquery('french', $1)) as rank,
+    (nb_hits * ts_rank(p_search.document, to_tsquery('french', $1))) as hits_rank
 FROM (SELECT remote_id as _id,
              title, SUBSTRING(description, 0, 255) as description, organization, nb_hits,
              setweight(to_tsvector('french', title), 'A') ||
@@ -22,6 +25,6 @@ FROM (SELECT remote_id as _id,
              setweight(to_tsvector('simple', organization), 'C') as document
       FROM datasets) p_search
 WHERE p_search.document @@ to_tsquery('french', $1)
-ORDER BY nb_hits DESC, ts_rank(p_search.document, to_tsquery('french', $1)) DESC LIMIT 10;
+ORDER BY hits_rank DESC LIMIT 10;
 '''
     return await connection.fetch(q, query)
