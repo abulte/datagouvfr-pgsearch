@@ -1,4 +1,5 @@
 import asyncpg
+import csv
 import httpx
 
 from minicli import cli, run
@@ -6,13 +7,19 @@ from progressist import ProgressBar
 
 from db import execute, get_conn
 
-IFILE = '/data/export.csv'
+
+def get_rows(ifile):
+    with open(ifile) as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            yield row
 
 
 @cli
-async def load():
-    await execute('DROP TABLE IF EXISTS datasets;')
-    await execute('''
+async def load(ifile='data/export.csv'):
+    conn = await get_conn()
+    await conn.execute('DROP TABLE IF EXISTS datasets;')
+    await conn.execute('''
     CREATE TABLE datasets (
         id serial PRIMARY KEY,
         remote_id varchar,
@@ -22,10 +29,11 @@ async def load():
         nb_hits int default 0,
         url varchar
     );''')
-    await execute(f'''
-    COPY datasets (remote_id, title, url, description, organization)
-    FROM '{IFILE}' WITH (DELIMITER ',', HEADER, FORMAT CSV);
-    ''')
+    result = await conn.copy_records_to_table(
+        'datasets',
+        records=get_rows(ifile),
+        columns=('remote_id', 'title', 'url', 'description', 'organization')
+    )
     await create_index()
 
 

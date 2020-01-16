@@ -8,6 +8,8 @@ Search in data.gouv.fr's catalog with PostgreSQL.
 - fetch the `nb_hits` metric from stats.data.gouv.fr
 - expose a simple API
 
+## Quickstart
+
 ```shell
 docker-compose up -d
 sh prepare-data.sh
@@ -94,4 +96,10 @@ python app.py
   ],
   "time": 0.15753912925720215
 }
+```
+
+## Deploy
+
+```
+git push dokku master
 ```

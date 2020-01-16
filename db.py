@@ -1,7 +1,8 @@
+import os
 import asyncpg
 
-DSN = 'postgres://postgres:postgres@localhost:5432/datagouvfr'
-
+DEFAULT_DSN = 'postgres://postgres:postgres@localhost:5432/datagouvfr'
+DSN = os.environ.get('DATABASE_URL') or DEFAULT_DSN
 
 async def get_conn():
     return await asyncpg.connect(DSN)
@@ -25,6 +26,6 @@ FROM (SELECT remote_id as _id,
              setweight(to_tsvector('simple', organization), 'C') as document
       FROM datasets) p_search
 WHERE p_search.document @@ to_tsquery('french', $1)
-ORDER BY hits_rank DESC LIMIT 10;
+ORDER BY hits_rank DESC, rank DESC LIMIT 10;
 '''
     return await connection.fetch(q, query)

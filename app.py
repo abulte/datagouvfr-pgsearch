@@ -7,6 +7,7 @@ from db import search, DSN
 app = Quart(__name__)
 app.DEBUG = True
 
+
 @app.route('/')
 async def index():
     query = request.args.get('q')
@@ -20,8 +21,11 @@ async def index():
         'data': [{k: v for (k,v) in r.items()} for r in res]
     })
 
+
 @app.before_first_request
 async def create_db():
     app.pool = await asyncpg.create_pool(DSN, max_size=20)
 
-app.run()
+
+if __name__ == '__main__':
+    app.run()
