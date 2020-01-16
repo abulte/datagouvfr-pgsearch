@@ -1,31 +1,28 @@
 import time
 import asyncpg
 
-from quart import Quart, jsonify, request, current_app
+from roll import Roll
+
 from db import search, DSN
 
-app = Quart(__name__)
-app.DEBUG = True
+app = Roll()
 
 
 @app.route('/')
-async def index():
-    query = request.args.get('q')
+async def index(request, response):
+    query = request.query.get('q')
     if not query:
-        return jsonify({})
+        response.json = {}
+        return
     start = time.time()
-    async with current_app.pool.acquire() as connection:
+    async with app.pool.acquire() as connection:
         res = await search(query, connection)
-    return jsonify({
+    response.json = {
         'time': time.time() - start,
         'data': [{k: v for (k,v) in r.items()} for r in res]
-    })
+    }
 
 
-@app.before_first_request
+@app.listen('startup')
 async def create_db():
     app.pool = await asyncpg.create_pool(DSN, max_size=20)
-
-
-if __name__ == '__main__':
-    app.run()
