@@ -103,4 +103,6 @@ python app.py
 
 ```
 git push dokku master
+# load is done at each deploy but not fetch_stats
+dokku run python cmd.py fetch_stats
 ```
