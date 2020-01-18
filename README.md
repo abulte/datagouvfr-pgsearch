@@ -18,7 +18,8 @@ python cmd.py fetch_stats
 python app.py
 ```
 
-🤜 http://localhost:5000?q=entreprises
+🤜 http://localhost:5000/?q=entreprises
+🤜 http://localhost:5000/api?q=entreprises
 
 ```json
 {
