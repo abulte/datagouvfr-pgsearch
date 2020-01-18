@@ -1,15 +1,25 @@
 import time
 import asyncpg
 
-from quart import Quart, jsonify, request, current_app
+from quart import Quart, jsonify, request, current_app, render_template
 from db import search, DSN
 
-app = Quart(__name__)
-app.DEBUG = True
+app = Quart(__name__ , static_url_path='', static_folder='static/dist')
+
+# TODO file based config
+app.debug = True
+if app.debug:
+    # disable cache for static file when debugging
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 
 @app.route('/')
 async def index():
+    return await render_template('index.html')
+
+
+@app.route('/api')
+async def api():
     query = request.args.get('q')
     if not query:
         return jsonify({})
@@ -28,4 +38,4 @@ async def create_db():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(use_reloader=True)

@@ -43,7 +43,7 @@ async def create_index():
 CREATE INDEX idx_fts_datasets ON datasets
 USING gin((setweight(to_tsvector('french', title), 'A') ||
              setweight(to_tsvector('french', description), 'B') ||
-             setweight(to_tsvector('simple', organization), 'C')));
+             setweight(to_tsvector('french', organization), 'C')));
 ''')
 
 
@@ -79,6 +79,15 @@ async def fetch_stats():
                 stats['2020'][0]['nb_hits'],
                 row['id']
             )
+
+
+@cli
+async def test():
+    conn = await get_conn()
+    rows = await conn.fetch('''
+    SELECT id, url FROM datasets WHERE title ilike $1;
+    ''', 'base des')
+    print(rows)
 
 
 if __name__ == '__main__':
