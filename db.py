@@ -23,9 +23,9 @@ FROM (SELECT remote_id as _id,
              title, SUBSTRING(description, 0, 255) as description, organization, nb_hits,
              setweight(to_tsvector('french', title), 'A') ||
              setweight(to_tsvector('french', description), 'B') ||
-             setweight(to_tsvector('simple', organization), 'C') as document
+             setweight(to_tsvector('french', organization), 'C') as document
       FROM datasets) p_search
 WHERE p_search.document @@ to_tsquery('french', $1)
 ORDER BY hits_rank DESC, rank DESC LIMIT 10;
 '''
-    return await connection.fetch(q, query)
+    return await connection.fetch(q, "'%s'" % query)
